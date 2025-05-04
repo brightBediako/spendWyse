@@ -26,6 +26,16 @@ require("./models/transactions");
 app.use("/api/users", userRoutes);
 app.use("/api/transactions", transactionRoutes);
 
+
+// 404 handler
+// This middleware will be called if no other route matches 
+app.all("*", (req, res,next) => {
+  res.status(404).json({
+    status: "fail",
+    message: "Not Found",
+  });
+});
+
 // express-error handler
 app.use(errorHandler);
 

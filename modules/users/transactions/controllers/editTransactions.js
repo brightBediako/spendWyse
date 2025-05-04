@@ -1,12 +1,16 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 
-
-const deleteTransactions = async (req, res) => {
+const editTransactions = async (req, res) => {
   const transactionModel = mongoose.model("transactions");
-  const usersModel = mongoose.model("users");
+    const usersModel = mongoose.model("users");
 
-  const { transaction_id } = req.params;
+  const { transaction_id, amount, transaction_type, remarks } = req.body;
+
+  if (!transaction_id) throw "Transaction ID is not valid";
+
+  if (transaction_type !== "income" && transaction_type !== "expense")
+    throw "Transaction type is not valid";
 
   if (!validator.isMongoId(transaction_id.toString()))
     throw "Transaction ID is not valid";
@@ -17,13 +21,31 @@ const deleteTransactions = async (req, res) => {
 
   if (!getTransactions) throw "Transaction not found";
 
+
+  await transactionModel.updateOne(
+    {
+      _id: transaction_id,
+    },
+    {
+      $set: {
+        amount,
+        transaction_type,
+        remarks,
+      },
+    },
+    {
+      runValidators: true,
+    }
+  );
+
+// how to update the user balance based on the transaction type
   if (getTransactions.transaction_type === "income") {
     // income logic
     await usersModel.updateOne(
       { _id: getTransactions.user_id },
       {
         $inc: {
-          balance: getTransactions.amount * -1,
+          balance: amount * -1,
         },
       },
       {
@@ -36,22 +58,19 @@ const deleteTransactions = async (req, res) => {
       { _id: getTransactions.user_id },
       {
         $inc: {
-          balance: getTransactions.amount,
+          balance: amount,
         },
       },
       {
         runValidators: true,
       }
     );
-  }
-
-  await transactionModel.deleteOne({
-    _id: transaction_id,
-  });
+    
+}
 
   res.status(200).json({
-    status: "Transaction deleted",
+    status: "Transaction updated successfully",
   });
 };
 
-module.exports = deleteTransactions;
+module.exports = editTransactions;
