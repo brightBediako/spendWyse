@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-// const jsonwebtoken = require("jsonwebtoken");
 const jwtManager = require("../../../../managers/jwtManager");
+const emailManager = require("../../../../managers/emailManager");
 
 const register = async (req, res) => {
   const usersModel = mongoose.model("users");
@@ -35,6 +35,13 @@ const register = async (req, res) => {
   });
 
   const accessToken = jwtManager(createdUser);
+
+  await emailManager(
+    createdUser.email,
+    "Welcome to spendWy$se",
+    `Hello ${createdUser.name}, welcome to <h3>spendWy$se</h3> platform!`,
+    `Hello ${createdUser.name}, welcome to spendWy$se platform!`
+  );
 
   res.status(201).json({
     status: "User registered successfully...",
