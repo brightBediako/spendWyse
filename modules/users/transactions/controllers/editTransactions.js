@@ -3,7 +3,7 @@ const validator = require("validator");
 
 const editTransactions = async (req, res) => {
   const transactionModel = mongoose.model("transactions");
-    const usersModel = mongoose.model("users");
+  const usersModel = mongoose.model("users");
 
   const { transaction_id, amount, transaction_type, remarks } = req.body;
 
@@ -21,7 +21,6 @@ const editTransactions = async (req, res) => {
 
   if (!getTransactions) throw "Transaction not found";
 
-
   await transactionModel.updateOne(
     {
       _id: transaction_id,
@@ -38,35 +37,7 @@ const editTransactions = async (req, res) => {
     }
   );
 
-// how to update the user balance based on the transaction type
-  if (getTransactions.transaction_type === "income") {
-    // income logic
-    await usersModel.updateOne(
-      { _id: getTransactions.user_id },
-      {
-        $inc: {
-          balance: amount * -1,
-        },
-      },
-      {
-        runValidators: true,
-      }
-    );
-  } else {
-    // expense logic
-    await usersModel.updateOne(
-      { _id: getTransactions.user_id },
-      {
-        $inc: {
-          balance: amount,
-        },
-      },
-      {
-        runValidators: true,
-      }
-    );
-    
-}
+  // how to update the user balance based on the transaction type
 
   res.status(200).json({
     status: "Transaction updated successfully",
