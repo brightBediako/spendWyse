@@ -1,151 +1,185 @@
-💸 spendWy$e API
+```markdown
+# 💸 spendWy$e API
 
-spendWy$e is a RESTful API built with Node.js, Express.js, and MongoDB that allows users to track their expenses securely. It features user authentication using JWT, secure password handling, and basic CRUD operations for managing expenses.
+**SpendWy$e** is a RESTful API built with **Node.js**, **Express.js**, and **MongoDB** that allows users to securely track their expenses. It features user authentication using **JWT**, secure password handling, and basic **CRUD operations** for managing transactions.
 
+---
 
-🚀 Features
+## 🚀 Features
 
-    ✅ User Registration & Login (with JWT-based authentication)
-    🔐 Protected Routes for authenticated users
-    📊 Full CRUD Operations on Expenses
-    🔁 Forgot Password and Reset Password (via email using Nodemailer)
-    🔄 Token-based session management
-    📦 RESTful API architecture
+- ✅ User Registration & Login (JWT-based authentication)
+- 🔐 Protected Routes for authenticated users
+- 📊 Full CRUD Operations on Expenses
+- 🔁 Forgot Password and Reset Password (via Nodemailer)
+- 🔄 Token-based Session Management
+- 📦 RESTful API Architecture
 
+---
 
-🛠️ Technology Stack
+## 🛠️ Technology Stack
 
-    Backend: Node.js, Express.js
-    Database: MongoDB
-    Authentication: JWT (JSON Web Tokens)
-    Password Hashing: bcryptjs
-    Environment Variables: dotenv
-    Email: Nodemailer
-    Validation: Express-validator
-    Testing: Jest/Mocha
-    Documentation: Swagger/Postman
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB
+- **Authentication**: JWT (JSON Web Tokens)
+- **Password Hashing**: bcryptjs
+- **Environment Variables**: dotenv
+- **Email**: Nodemailer
+- **Validation**: express-validator
+- **Testing**: Jest / Mocha
+- **Documentation**: Swagger / Postman
 
+---
 
-📁 Project Structure
-    spendWy$e/
-    ├── handlers/
-    │   ├── errorHandler.js
-    ├── managers/
-    │   ├── emailManager.js
-    │   └── jwtManager.js
-    ├── middleware/
-    │   ├── auth.js
-    ├── models/
-    │   ├── users.js
-    │   └── transactions.js
-    ├── modules/
-    │   └── transactions/
-    │   │   └── controllers/
-    │   │   │   ├── addExpense.js
-    │   │   │   ├── addIncome.js
-    │   │   │   ├── deleteTransactions.js
-    │   │   │   ├── editTransactions.js
-    │   │   │   └── getTransactions.js
-    │   │   └── transactions.routes.js
-    │   └── users/
-    │       └── controllers/
-    │       │   ├── login.js
-    │       │   ├── register.js
-    │       │   ├── resetPassword.js
-    │       │   ├── forgetPassword.js
-    │       │   └── userDashboard.js
-    │       └── users.routes.js
-    ├── .env
-    ├── .gitignore
-    ├── index.js
-    ├── package.json
-    ├── package-lock.json
-    └── README.md
+## 📁 Project Structure
 
+```
+spendWy$e/
+├── handlers/
+│   └── errorHandler.js
+├── managers/
+│   ├── emailManager.js
+│   └── jwtManager.js
+├── middleware/
+│   └── auth.js
+├── models/
+│   ├── users.js
+│   └── transactions.js
+├── modules/
+│   ├── transactions/
+│   │   ├── controllers/
+│   │   │   ├── addExpense.js
+│   │   │   ├── addIncome.js
+│   │   │   ├── deleteTransactions.js
+│   │   │   ├── editTransactions.js
+│   │   │   └── getTransactions.js
+│   │   └── transactions.routes.js
+│   └── users/
+│       ├── controllers/
+│       │   ├── login.js
+│       │   ├── register.js
+│       │   ├── resetPassword.js
+│       │   ├── forgetPassword.js
+│       │   └── userDashboard.js
+│       └── users.routes.js
+├── .env
+├── .gitignore
+├── index.js
+├── package.json
+├── package-lock.json
+└── README.md
+```
 
-⚙️ Installation
-    git clone https://github.com/brightBediako/spendWyse.git
-    cd spendWy$e
-    npm install
+---
 
+## ⚙️ Installation
 
-Create a .env file in the root directory and add your environment variables:
-    MONGO_URI=your_mongodb_uri
-    JWT_SECRET=your_jwt_secret
+```bash
+git clone https://github.com/brightBediako/spendWyse.git
+cd spendWy$e
+npm install
+```
 
+---
 
-▶️ Running the App
-    node index.js
-    # or for development with nodemon
-    nodemon index.js
+## 🧾 Environment Variables
 
+Create a `.env` file in the root directory with the following:
 
-🔐 Authentication Flow
+```env
+MONGO_URI=your_mongodb_uri
+JWT_SECRET=your_jwt_secret
+```
 
-    1. Register: POST /api/auth/register
-    2. Login: POST /api/auth/login
-    3. Forgot Password: POST /api/auth/forgot-password
-    4. Reset Password: PUT /api/auth/reset-password/:token
+---
 
+## ▶️ Running the App
 
-🧾 Expense Endpoints (Protected)
-    Add Expense: POST /api/transactions/add-expense
-    Add Income: POST /api/transactions/add-income
-    Edit Transaction: PUT /api/transactions/edit-transaction/:id
-    Delete Transaction: DELETE /api/transactions/delete-transaction/:id
-    Get Transactions: GET /api/transactions/get-transactions
+```bash
+node index.js
+# or with nodemon for development
+nodemon index.js
+```
 
+---
 
-    | Method | Endpoint            | Description           |
-    | ------ | ------------------- | --------------------- |
-    | GET    | `/api/expenses`     | Get all user expenses |
-    | POST   | `/api/expenses`     | Create a new expense  |
-    | GET    | `/api/expenses/:id` | Get a single expense  |
-    | PUT    | `/api/expenses/:id` | Update an expense     |
-    | DELETE | `/api/expenses/:id` | Delete an expense     |
+## 🔐 Authentication Flow
 
-    >Add Authorization: Bearer <token> header to access these routes.
+| Method | Endpoint                         | Description                    |
+|--------|----------------------------------|--------------------------------|
+| POST   | `/api/auth/register`             | Register a new user            |
+| POST   | `/api/auth/login`                | Login and receive JWT token    |
+| POST   | `/api/auth/forgot-password`      | Request password reset link    |
+| PUT    | `/api/auth/reset-password/:token`| Reset password via token       |
 
+---
 
-💌 Email Functionality
+## 💰 Expense Endpoints (Protected)
 
-    Users can reset their password by receiving a secure reset link via email.
-    Emails are sent using Nodemailer with your configured email service.
+> All routes require the header:  
+> `Authorization: Bearer <token>`
 
+| Method | Endpoint                                      | Description                     |
+|--------|-----------------------------------------------|---------------------------------|
+| POST   | `/api/transactions/add-expense`               | Add a new expense               |
+| POST   | `/api/transactions/add-income`                | Add income record               |
+| PUT    | `/api/transactions/edit-transaction/:id`      | Edit a transaction              |
+| DELETE | `/api/transactions/delete-transaction/:id`    | Delete a transaction            |
+| GET    | `/api/transactions/get-transactions`          | Get all user transactions       |
 
+---
 
-Testing
-Run tests with the following command:
-    npm test
+## 💌 Email Functionality
 
-For test coverage:
-    npm run test:coverage
+- Users can reset their password by receiving a secure reset link via email.
+- Emails are sent using **Nodemailer** and your configured email provider.
 
+---
 
+## 🧪 Testing
 
+Run unit and integration tests:
 
+```bash
+npm test
+```
 
+Run test coverage report:
 
+```bash
+npm run test:coverage
+```
 
+---
 
+## 🤝 Contributing
 
+1. Fork the repository
+2. Create your feature branch:
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```
+3. Commit your changes:
+   ```bash
+   git commit -m 'Add some amazing feature'
+   ```
+4. Push to the branch:
+   ```bash
+   git push origin feature/amazing-feature
+   ```
+5. Open a Pull Request
 
+---
 
+## 📄 License
 
+This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.
 
+---
 
+## 🔗 Connect
 
-Contributing
+Created with ❤️ by **Bright Bediako**  
+[GitHub](https://github.com/brightBediako)
 
-    Fork the repository
-    Create your feature branch (git checkout -b feature/amazing-feature)
-    Commit your changes (git commit -m 'Add some amazing feature')
-    Push to the branch (git push origin feature/amazing-feature)
-    Open a Pull Request
-
-License
-    This project is licensed under the MIT License - see the LICENSE file for details.
-
-
-
-
+---
+```
