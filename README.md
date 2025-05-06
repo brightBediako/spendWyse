@@ -104,7 +104,7 @@ Create a .env file in the root directory and add your environment variables:
     | PUT    | `/api/expenses/:id` | Update an expense     |
     | DELETE | `/api/expenses/:id` | Delete an expense     |
 
-    Add Authorization: Bearer <token> header to access these routes.
+    >Add Authorization: Bearer <token> header to access these routes.
 
 
 💌 Email Functionality
