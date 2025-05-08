@@ -21,6 +21,32 @@ const editTransactions = async (req, res) => {
 
   if (!getTransactions) throw "Transaction not found";
 
+  // Retrieve the user associated with the transaction
+  const user = await usersModel.findOne({ _id: getTransactions.user_id });
+  if (!user) throw "User not found";
+
+  // Calculate the balance adjustment
+  let balanceAdjustment = 0;
+
+  // Reverse the effect of the old transaction
+  if (getTransactions.transaction_type === "income") {
+    balanceAdjustment -= getTransactions.amount;
+  } else if (getTransactions.transaction_type === "expense") {
+    balanceAdjustment += getTransactions.amount;
+  }
+
+  // Apply the effect of the new transaction
+  if (transaction_type === "income") {
+    balanceAdjustment += amount;
+  } else if (transaction_type === "expense") {
+    balanceAdjustment -= amount;
+  }
+
+  // Update the user's balance
+  user.balance += balanceAdjustment;
+  await user.save();
+
+  // Update the transaction
   await transactionModel.updateOne(
     {
       _id: transaction_id,
@@ -36,8 +62,6 @@ const editTransactions = async (req, res) => {
       runValidators: true,
     }
   );
-
-  // how to update the user balance based on the transaction type
 
   res.status(200).json({
     status: "Transaction updated successfully",
