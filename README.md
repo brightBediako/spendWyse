@@ -180,6 +180,3 @@ This project is licensed under the **MIT License** – see the [LICENSE](LICENSE
 
 Created with ❤️ by **Bright Bediako**  
 [GitHub](https://github.com/brightBediako)
-
----
-```
