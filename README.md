@@ -3,7 +3,6 @@
 
 **SpendWy$e** is a RESTful API built with **Node.js**, **Express.js**, and **MongoDB** that allows users to securely track their expenses. It features user authentication using **JWT**, secure password handling, and basic **CRUD operations** for managing transactions.
 
----
 
 ## 🚀 Features
 
@@ -14,7 +13,6 @@
 - 🔄 Token-based Session Management
 - 📦 RESTful API Architecture
 
----
 
 ## 🛠️ Technology Stack
 
