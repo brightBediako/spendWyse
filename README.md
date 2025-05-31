@@ -147,6 +147,8 @@ Run test coverage report:
 npm run test:coverage
 ```
 
+![Postman Test](public/image.png)
+
 ---
 
 ## 🤝 Contributing
@@ -178,6 +180,10 @@ This project is licensed under the **MIT License** – see the [LICENSE](LICENSE
 
 Created with ❤️ by **Bright Bediako**  
 [GitHub](https://github.com/brightBediako)
+
+
+## Contributors
+[Bright Bediako](bright.bediako.dev@gmail.com)
 
 ---
 ```
