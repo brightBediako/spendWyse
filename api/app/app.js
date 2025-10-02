@@ -2,12 +2,16 @@ import express from "express";
 import dotenv from "dotenv";
 
 import authRoute from "../routes/auth.route.js";
+import userRoute from "../routes/user.route.js";
+import categoryRoute from "../routes/category.route.js";
+// import transactionRoute from "../routes/transaction.route.js";
 
 import cors from "cors";
-// import cookieParser from "cookie-parser";
-
 import dbConfig from "../config/dbConfig.js";
-// import { globalErrhandler, notFound } from "../middlewares/globalErrHandler.js";
+import {
+  globalErrhandler,
+  notFound,
+} from "../middlewares/errorHandlerMiddleware.js";
 
 dotenv.config();
 //db connect
@@ -21,23 +25,15 @@ app.use(cors());
 app.use(cors({ origin: "http://localhost:5000", credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use(cookieParser());
-
-// health check
-app.get("/health", (req, res) => {
-  res.status(200).json({
-    status: "OK",
-    message: "SpendWyse API is running",
-    timestamp: new Date().toISOString(),
-  });
-});
 
 // custom routes
-app.use("/api/users/auth", authRoute);
+app.use("/api/auth", authRoute);
+app.use("/api/profile", userRoute);
+app.use("/api/categories", categoryRoute);
+// app.use("/api/transaction", transactionRoute);
 
-// error middleware
-// not found middleware
-// app.use(notFound);
-// app.use(globalErrhandler);
+// error handler and not found middleware
+app.use(notFound);
+app.use(globalErrhandler);
 
 export default app;
