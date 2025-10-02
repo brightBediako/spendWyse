@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import authRoute from "../routes/auth.route.js";
 import userRoute from "../routes/user.route.js";
 import categoryRoute from "../routes/category.route.js";
-// import transactionRoute from "../routes/transaction.route.js";
+import transactionRoute from "../routes/transaction.route.js";
 
 import cors from "cors";
 import dbConfig from "../config/dbConfig.js";
@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoute);
 app.use("/api/profile", userRoute);
 app.use("/api/categories", categoryRoute);
-// app.use("/api/transaction", transactionRoute);
+app.use("/api/transactions", transactionRoute);
 
 // error handler and not found middleware
 app.use(notFound);

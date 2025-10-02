@@ -8,35 +8,46 @@ export const createCategory = asyncHandler(async (req, res, next) => {
   if (!name || !type) {
     return next(createError(400, "All fields are required"));
   }
-  const newCategory = new Category({
-    user: req.user,
-    name,
-    type,
-  });
+
+  // convert name to lowercase
+  const normalizedName = name.toLowerCase();
+
+  // check if type is valid
+  const validTypes = ["income", "expense"];
+  if (!validTypes.includes(type.toLowerCase())) {
+    return next(createError(400, "Invalid category type" + type));
+  } 
 
   //   check if category already exists for user
-  const existingCategory = await Category.findOne({
+  const categoryExists = await Category.findOne({
     user: req.user,
-    name,
-    type,
+    name: normalizedName,
   });
 
-  if (existingCategory) {
-    return next(createError(400, "Category already exists!"));
+  if (categoryExists) {
+    return next(
+      createError(400, `Category ${categoryExists.name} already exists`)
+    );
   }
-  const savedCategory = await newCategory.save();
-  res.status(201).json(savedCategory);
+
+
+  const category = new Category({
+    name: normalizedName,
+    type: type.toLowerCase(),
+    user: req.user,
+  });
+  res.status(201).json(await category.save());
 });
 
 // get user categories
 export const getCategories = asyncHandler(async (req, res, next) => {
-    const categories = await Category.find({ user: req.user });
-    res.status(200).json(categories);
+  const categories = await Category.find({ user: req.user });
+  res.status(200).json(categories);
 });
 
 // update category
 export const updateCategory = asyncHandler(async (req, res, next) => {
-  const { name, type } = req.body;
+  // const { name, type } = req.body;
 
   const category = await Category.findById(req.params.id);
   if (!category) return next(createError(404, "Category not found!"));
