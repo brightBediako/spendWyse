@@ -12,6 +12,6 @@ const userRouter = express.Router();
 userRouter.get("/", isAuthenticated, profile);
 userRouter.put("/change-password", isAuthenticated, changePassword);
 userRouter.put("/update-profile", isAuthenticated, updateProfile);
-userRouter.delete("/:id", isAuthenticated, deleteProfile);
+userRouter.delete("/delete/:id", isAuthenticated, deleteProfile);
 
 export default userRouter;

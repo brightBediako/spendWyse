@@ -9,9 +9,13 @@ import { isAuthenticated } from "../middlewares/isAuth.js";
 
 const transactionRouter = express.Router();
 
-transactionRouter.post("/create-transaction", isAuthenticated, createTransaction);
+transactionRouter.post(
+  "/create-transaction",
+  isAuthenticated,
+  createTransaction
+);
 transactionRouter.get("/", isAuthenticated, getTransactions);
-transactionRouter.put("/:id", isAuthenticated, updateTransaction);
-transactionRouter.delete("/:id", isAuthenticated, deleteTransaction);
+transactionRouter.put("/update/:id", isAuthenticated, updateTransaction);
+transactionRouter.delete("/delete/:id", isAuthenticated, deleteTransaction);
 
 export default transactionRouter;

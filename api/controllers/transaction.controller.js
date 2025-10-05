@@ -71,20 +71,27 @@ export const getTransactions = asyncHandler(async (req, res, next) => {
 
 // update category
 export const updateTransaction = asyncHandler(async (req, res, next) => {
-  //   const { type, category, amount, date, description } = req.body;
-
   const transaction = await Transaction.findById(req.params.id);
-  if (!transaction) return next(createError(404, "Transaction not found!"));
 
   if (transaction.userId !== req.userId) {
     return next(createError(403, "You can update only your transaction!"));
   }
-  const updatedTransaction = await Transaction.findByIdAndUpdate(
-    req.params.id,
-    { $set: req.body },
-    { new: true }
-  );
-  res.status(200).json(updatedTransaction);
+  if (!transaction) return next(createError(404, "Transaction not found!"));
+
+  if (transaction && transaction.user.toString() === req.user.toString()) {
+    (transaction.type = req.body.type || transaction.type),
+      (transaction.category = req.body.category || transaction.category),
+      (transaction.amount = req.body.amount || transaction.amount),
+      (transaction.date = req.body.date || transaction.date),
+      (transaction.description =
+        req.body.description || transaction.description);
+
+    const updatedTransaction = await transaction.save();
+    res.status(200).json({
+      message: "Transaction has been updated successfully",
+      updatedTransaction,
+    });
+  }
 });
 
 // delete transaction
