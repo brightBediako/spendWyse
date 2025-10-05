@@ -1,6 +1,7 @@
 import Category from "../models/Transaction.js";
 import asyncHandler from "express-async-handler";
 import { createError } from "../middlewares/errorHandlerMiddleware.js";
+import Transaction from "../models/Transaction.js";
 
 // create new category
 export const createTransaction = asyncHandler(async (req, res, next) => {
@@ -40,15 +41,37 @@ export const createTransaction = asyncHandler(async (req, res, next) => {
     .json({ message: "Transaction created successfully", transaction });
 });
 
-// get user transactions
+// get user transactions with filtering and sorting
 export const getTransactions = asyncHandler(async (req, res, next) => {
-  const transactions = await Category.find({ user: req.user });
+  const { startDate, endDate, type, category } = req.query;
+  let filters = { user: req.user };
+
+  if (startDate) {
+    filters.date = { ...filters.date, $gte: new Date(startDate) };
+  }
+  if (endDate) {
+    filters.date = { ...filters.date, $lte: new Date(endDate) };
+  }
+  if (type) {
+    filters.category = type;
+  }
+  if (category) {
+    if (category === "All") {
+    } else if (category === "Uncategorized") {
+      filters.category = "Uncategorized";
+    } else {
+      filters.category = category;
+    }
+  }
+
+  const transactions = await Transaction.find(filters).sort({ date: -1 });
+
   res.status(200).json(transactions);
 });
 
 // update category
 export const updateTransaction = asyncHandler(async (req, res, next) => {
-//   const { type, category, amount, date, description } = req.body;
+  //   const { type, category, amount, date, description } = req.body;
 
   const transaction = await Transaction.findById(req.params.id);
   if (!transaction) return next(createError(404, "Transaction not found!"));
