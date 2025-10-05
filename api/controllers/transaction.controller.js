@@ -1,7 +1,6 @@
 import Category from "../models/Transaction.js";
 import asyncHandler from "express-async-handler";
 import { createError } from "../middlewares/errorHandlerMiddleware.js";
-import Transaction from "../models/Transaction.js";
 
 // create new category
 export const createTransaction = asyncHandler(async (req, res, next) => {
