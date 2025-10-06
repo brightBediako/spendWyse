@@ -33,7 +33,9 @@ export const register = asyncHandler(async (req, res, next) => {
 // login user
 export const login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
-
+  if (!email || !password) {
+    return next(createError(400, "Email and password are required"));
+  }
   const user = await User.findOne({ email });
   if (!user) {
     return next(createError(404, "User not found"));
