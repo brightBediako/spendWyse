@@ -16,7 +16,7 @@ export const createCategory = asyncHandler(async (req, res, next) => {
   const validTypes = ["income", "expense"];
   if (!validTypes.includes(type.toLowerCase())) {
     return next(createError(400, "Invalid category type" + type));
-  } 
+  }
 
   //   check if category already exists for user
   const categoryExists = await Category.findOne({
@@ -29,7 +29,6 @@ export const createCategory = asyncHandler(async (req, res, next) => {
       createError(400, `Category ${categoryExists.name} already exists`)
     );
   }
-
 
   const category = new Category({
     name: normalizedName,
@@ -47,30 +46,61 @@ export const getCategories = asyncHandler(async (req, res, next) => {
 
 // update category
 export const updateCategory = asyncHandler(async (req, res, next) => {
-  // const { name, type } = req.body;
+  const categoryId = req.params;
+  const { name, type } = req.body;
 
-  const category = await Category.findById(req.params.id);
+  const normalizedName = name.toLowerCase();
+
+  const category = await Category.findById(categoryId);
+
   if (!category) return next(createError(404, "Category not found!"));
   if (category.userId !== req.userId) {
     return next(createError(403, "You can update only your category!"));
   }
-  const updatedCategory = await Category.findByIdAndUpdate(
-    req.params.id,
-    { $set: req.body },
-    { new: true }
-  );
+
+  const oldName = category.name;
+  // update category properties
+  category.name = normalizedName || category.name;
+  category.type = type || category.type;
+  // check if category with the same name already exists
+  if (oldName !== normalizedName) {
+    const categoryExists = await Category.findOne({
+      user: req.userId,
+      name: normalizedName,
+    });
+    if (categoryExists) {
+      return next(
+        createError(400, `Category ${categoryExists.name} already exists`)
+      );
+    }
+  }
+  const updatedCategory = await category.save();
+  // update category in transactions
+  if (oldName !== updateCategory.name) {
+    await Transaction.updateMany(
+      { user: req.user, category: oldName },
+      { $set: { category: updatedCategory.name } }
+    );
+  }
   res.status(200).json(updatedCategory);
 });
 
 // delete category
 export const deleteCategory = asyncHandler(async (req, res, next) => {
   const category = await Category.findById(req.params.id);
-  if (!category) return next(createError(404, "Category not found!"));
+if (!category) return next(createError(404, "Category not found!"));
 
-  if (category.userId !== req.userId) {
-    return next(createError(403, "You can delete only your category!"));
-  }
-
+if (category.user.toString() === req.user.toString()) {
+  // update transactions with this category
+  const defaultCategory = "Uncategorized";
+  await Transaction.updateMany(
+    { user: req.user, category: category._id },
+    { $set: { category: defaultCategory } }
+  );
+  // delete category
   await Category.findByIdAndDelete(req.params.id);
-  res.status(200).send("Category has been deleted.");
+  res.status(200).json({ message: "Category has been deleted." });
+} else {
+  return next(createError(403, "You can delete only your category!"));
+}
 });
