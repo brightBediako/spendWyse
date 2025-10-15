@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { loginAPI } from "../../services/auth/authServices";
 import AlertMessage from "../Alert/AlertMessage";
@@ -51,7 +52,6 @@ const LoginForm = () => {
         })
     },
   });
-  console.log(isPending, isError, error, isSuccess);
 
 
   return (

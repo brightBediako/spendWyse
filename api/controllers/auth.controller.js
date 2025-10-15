@@ -6,14 +6,14 @@ import jwt from "jsonwebtoken";
 
 // register user
 export const register = asyncHandler(async (req, res, next) => {
-  const { email, username, password } = req.body;
-  if (!email || !username || !password) {
+  const { username, email, password } = req.body;
+  if (!username || !email || !password) {
     return next(createError(400, "All fields are required"));
   }
 
   // Check if user already exists
   const existingUser = await User.findOne({
-    $or: [{ email: req.body.email }, { username: req.body.username }],
+    $or: [{ email: req.body.email }],
   });
 
   if (existingUser) {
