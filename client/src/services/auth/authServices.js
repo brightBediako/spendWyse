@@ -21,3 +21,10 @@ export const registerAPI = async ({ username, email, password }) => {
   //   return a promise that resolves to response data
   return response.data;
 };
+
+
+// lock user for 10 minutes after 5 failed login attempts
+export const lockUserAPI = async () => {
+  const response = await axios.post(`${BASE_URL}auth/lock`);
+  return response.data;
+}

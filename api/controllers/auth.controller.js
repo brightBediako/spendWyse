@@ -67,6 +67,7 @@ export const logout = asyncHandler(async (req, res) => {
 
 // lock user for 10 minutes from signing in if too many failed login attempts
 export const lockUser = asyncHandler(async (req, res) => {
-  // TODO: Implement lock user logic
-  res.status(200).json({ message: "User locked successfully" });
+// TODO: Implement lock user logic
+
+  res.status(200).json({ message: "User locked for 10 minutes" }); 
 });
