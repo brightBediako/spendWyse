@@ -7,6 +7,7 @@ import RegistrationForm from "./components/Auth/Register";
 import AddCategory from "./components/Category/AddCategory";
 // import { getUserFromStorage } from "./utils/getUserFromStorage";
 import { useSelector } from "react-redux";
+import CategoriesList from "./components/Category/CategoriesList";
 
 function App() {
   // get token
@@ -22,7 +23,8 @@ function App() {
         <Route path="/" element={<HeroSection />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<RegistrationForm />} />
-        <Route path="/category" element={<AddCategory />} />
+        <Route path="/add-category" element={<AddCategory />} />
+        <Route path="/categories" element={<CategoriesList />} />
       </Routes>
     </BrowserRouter>
 
