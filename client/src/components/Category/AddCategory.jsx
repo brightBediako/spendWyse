@@ -26,7 +26,7 @@ const AddCategory = () => {
       type: "",
       name: "",
     },
-    onSubmit: (values) => {},
+    onSubmit: (values) => { },
   });
 
   return (
