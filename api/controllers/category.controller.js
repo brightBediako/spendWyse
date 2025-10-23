@@ -1,4 +1,5 @@
 import Category from "../models/Category.js";
+import Transaction from "../models/Transaction.js";
 import asyncHandler from "express-async-handler";
 import { createError } from "../middlewares/errorHandlerMiddleware.js";
 
@@ -46,26 +47,30 @@ export const getCategories = asyncHandler(async (req, res, next) => {
 
 // update category
 export const updateCategory = asyncHandler(async (req, res, next) => {
-  const categoryId = req.params;
+  // ensure we use the id string not the whole params object
+  const categoryId = req.params.id;
   const { name, type } = req.body;
 
-  const normalizedName = name.toLowerCase();
+  // normalize name only if provided
+  const normalizedName = name ? name.toLowerCase() : null;
 
   const category = await Category.findById(categoryId);
 
   if (!category) return next(createError(404, "Category not found!"));
-  if (category.userId !== req.userId) {
+  // req.user is set by auth middleware to the user id (string)
+  if (category.user.toString() !== req.user) {
     return next(createError(403, "You can update only your category!"));
   }
 
   const oldName = category.name;
-  // update category properties
-  category.name = normalizedName || category.name;
-  category.type = type || category.type;
-  // check if category with the same name already exists
-  if (oldName !== normalizedName) {
+  // update category properties only when provided
+  if (normalizedName) category.name = normalizedName;
+  if (type) category.type = type.toLowerCase();
+
+  // check if category with the same name already exists for this user
+  if (normalizedName && oldName !== normalizedName) {
     const categoryExists = await Category.findOne({
-      user: req.userId,
+      user: req.user,
       name: normalizedName,
     });
     if (categoryExists) {
@@ -74,9 +79,10 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
       );
     }
   }
+
   const updatedCategory = await category.save();
-  // update category in transactions
-  if (oldName !== updateCategory.name) {
+  // update category in transactions when name changed
+  if (normalizedName && oldName !== updatedCategory.name) {
     await Transaction.updateMany(
       { user: req.user, category: oldName },
       { $set: { category: updatedCategory.name } }
@@ -94,7 +100,7 @@ if (category.user.toString() === req.user.toString()) {
   // update transactions with this category
   const defaultCategory = "Uncategorized";
   await Transaction.updateMany(
-    { user: req.user, category: category._id },
+    { user: req.user, category: category.name },
     { $set: { category: defaultCategory } }
   );
   // delete category

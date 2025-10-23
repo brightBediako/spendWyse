@@ -10,23 +10,54 @@ import {
 import { SiDatabricks } from "react-icons/si";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
+import { updateCategoryAPI } from "../../services/categories/categoryService";
+import AlertMessage from "../Alert/AlertMessage";
 
 const validationSchema = Yup.object({
-  name: Yup.string()
-    .required("Category name is required")
-    .oneOf(["income", "expense"]),
+  name: Yup.string(),
   type: Yup.string()
-    .required("Category type is required")
     .oneOf(["income", "expense"]),
 });
 
 const UpdateCategory = () => {
+  // get category id from params
+  const { id } = useParams();
+
+  // navigation
+  const navigate = useNavigate();
+
+  // mutation to add category
+  const {
+    mutateAsync,
+    isPending,
+    isError,
+    error,
+    isSuccess,
+  } = useMutation({
+    mutationFn: updateCategoryAPI,
+    mutationKey: ["update-category"],
+    onSuccess: () => {
+      // redirect to categories page after successful addition
+      setTimeout(() => {
+        navigate("/categories");
+      }, 2000);
+    },
+  });
+
+  // formik setup
   const formik = useFormik({
     initialValues: {
       type: "",
       name: "",
     },
-    onSubmit: (values) => {},
+    validationSchema,
+
+    onSubmit: (values) => {
+      const data = { id, ...values };
+      mutateAsync(data)
+        .then((data) => console.log(data))
+        .catch((e) => console.log(e));
+    },
   });
 
   return (
@@ -41,7 +72,7 @@ const UpdateCategory = () => {
         <p className="text-gray-600">Fill in the details below.</p>
       </div>
       {/* Display alert message */}
-      {/* {isError && (
+      {isError && (
         <AlertMessage
           type="error"
           message={
@@ -55,7 +86,7 @@ const UpdateCategory = () => {
           type="success"
           message="Category updated successfully, redirecting..."
         />
-      )} */}
+      )}
       {/* Category Type */}
       <div className="space-y-2">
         <label

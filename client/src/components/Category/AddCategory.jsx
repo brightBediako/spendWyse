@@ -34,7 +34,7 @@ const AddCategory = () => {
     isSuccess,
   } = useMutation({
     mutationFn: addCategoryAPI,
-    mutationKey: ["login"],
+    mutationKey: ["category"],
     onSuccess: () => {
       // redirect to categories page after successful addition
       setTimeout(() => {

@@ -43,12 +43,17 @@ export const deleteCategoryAPI = async (categoryId) => {
 };
 
 // update category
-export const updateCategoryAPI = async (categoryId, { type, name }) => {
+export const updateCategoryAPI = async ({ type, name, id }) => {
   const response = await axios.put(
-    `${BASE_URL}categories/update/${categoryId}`,
+    `${BASE_URL}categories/update/${id}`,
     {
       type,
       name,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     }
   );
   //   return a promise that resolves to response data

@@ -8,6 +8,7 @@ import AddCategory from "./components/Category/AddCategory";
 // import { getUserFromStorage } from "./utils/getUserFromStorage";
 import { useSelector } from "react-redux";
 import CategoriesList from "./components/Category/CategoriesList";
+import UpdateCategory from "./components/Category/UpdateCategory";
 
 function App() {
   // get token
@@ -25,6 +26,7 @@ function App() {
         <Route path="/register" element={<RegistrationForm />} />
         <Route path="/add-category" element={<AddCategory />} />
         <Route path="/categories" element={<CategoriesList />} />
+        <Route path="/update-category/:id" element={<UpdateCategory />} />
       </Routes>
     </BrowserRouter>
 

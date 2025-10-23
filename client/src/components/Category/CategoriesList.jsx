@@ -3,10 +3,11 @@ import { FaTrash, FaEdit } from "react-icons/fa";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { getCategoriesAPI } from "../../services/categories/categoryService";
+import AlertMessage from "../Alert/AlertMessage";
 
 const CategoriesList = () => {
   // fetch categories
-  const { data, isError, isLoading, isFetched } = useQuery({
+  const { data, isError, isLoading, isFetched, error } = useQuery({
     queryKey: ["categories"],
     queryFn: getCategoriesAPI,
   });
@@ -15,6 +16,10 @@ const CategoriesList = () => {
   return (
     <div className="max-w-md mx-auto my-10 bg-white p-6 rounded-lg shadow-lg">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">Categories</h2>
+      {/* {Display message} */}
+      {isLoading && <AlertMessage type='loading' message='Loading' />}
+      {isError && (<AlertMessage type='error' message={error.response.data.message} />)}
+
       <ul className="space-y-4">
         {data?.map((category) => (
           <li
@@ -25,8 +30,8 @@ const CategoriesList = () => {
               <span className="text-gray-800">{category?.name}</span>
               <span
                 className={`ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${category.type === "income"
-                    ? "bg-green-100 text-green-800"
-                    : "bg-red-100 text-red-800"
+                  ? "bg-green-100 text-green-800"
+                  : "bg-red-100 text-red-800"
                   }`}
               >
                 {category?.type?.charAt(0).toUpperCase() +
