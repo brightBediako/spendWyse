@@ -1,7 +1,10 @@
 import axios from "axios";
 import { BASE_URL } from "../../utils/url";
+import { getUserFromStorage } from "../../utils/getUserFromStorage";
 
-// add transaction
+const token = getUserFromStorage();
+
+// add Transaction
 export const addTransactionAPI = async ({
   type,
   category,
@@ -10,48 +13,68 @@ export const addTransactionAPI = async ({
   description,
 }) => {
   const response = await axios.post(
-    `${BASE_URL}transactions/create-transaction`,
+    `${BASE_URL}transaction/create-transaction`,
     {
       type,
       category,
       amount,
       date,
       description,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     }
   );
   //   return a promise that resolves to response data
   return response.data;
 };
 
-// get all transactions
+// get all Transactions
 export const getTransactionsAPI = async () => {
-  const response = await axios.get(`${BASE_URL}transactions`);
+  const response = await axios.get(`${BASE_URL}transactions`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   //   return a promise that resolves to response data
   return response.data;
 };
 
-// delete transaction
-export const deleteTransactionAPI = async (transactionId) => {
-  const response = await axios.delete(
-    `${BASE_URL}transactions/delete/${transactionId}`
-  );
+// delete Transaction
+export const deleteTransactionAPI = async (id) => {
+  const response = await axios.delete(`${BASE_URL}transactions/delete/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   //   return a promise that resolves to response data
   return response.data;
 };
 
-// update transaction
-export const updateTransactionAPI = async (
-  transactionId,
-  { type, category, amount, date, description }
-) => {
+// update Transaction
+export const updateTransactionAPI = async ({
+  type,
+  category,
+  amount,
+  date,
+  description,
+  id,
+}) => {
   const response = await axios.put(
-    `${BASE_URL}transactions/update/${transactionId}`,
+    `${BASE_URL}categories/update/${id}`,
     {
-      amount,
       type,
       category,
+      amount,
       date,
       description,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     }
   );
   //   return a promise that resolves to response data

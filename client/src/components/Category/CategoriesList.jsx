@@ -1,16 +1,41 @@
 import React from "react";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
-import { getCategoriesAPI } from "../../services/categories/categoryService";
+import { Link, useNavigate } from "react-router-dom";
+import { getCategoriesAPI, deleteCategoryAPI } from "../../services/categories/categoryService";
 import AlertMessage from "../Alert/AlertMessage";
 
 const CategoriesList = () => {
   // fetch categories
-  const { data, isError, isLoading, isFetched, error } = useQuery({
+  const { data, isError, isLoading, error, refetch } = useQuery({
     queryKey: ["categories"],
     queryFn: getCategoriesAPI,
   });
+
+  // navigate hook
+  const navigate = useNavigate();
+
+  // delete category mutation
+  const { mutateAsync: mutationAsync } = useMutation({
+    mutationFn: deleteCategoryAPI,
+    mutationKey: ["delete-category"],
+    // onSuccess: () => {
+    //   // refetch categories after deletion
+    //   navigate(0);
+    // },
+  });
+
+  // handle delete
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      mutationAsync(id)
+        .then(() => {
+          // refetch categories after deletion
+          refetch();
+        })
+        .catch((e) => console.log(e));
+    }
+  };
 
 
   return (
@@ -45,7 +70,7 @@ const CategoriesList = () => {
                 </button>
               </Link>
               <button
-                // onClick={() => handleDelete(category?._id)}
+                onClick={() => handleDelete(category?._id)}
                 className="text-red-500 hover:text-red-700"
               >
                 <FaTrash />

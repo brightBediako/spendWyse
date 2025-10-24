@@ -34,9 +34,12 @@ export const getCategoriesAPI = async () => {
 };
 
 // delete category
-export const deleteCategoryAPI = async (categoryId) => {
+export const deleteCategoryAPI = async (id) => {
   const response = await axios.delete(
-    `${BASE_URL}categories/delete/${categoryId}`
+    `${BASE_URL}categories/delete/${id}`,
+    {headers: {
+        Authorization: `Bearer ${token}`,
+      },}
   );
   //   return a promise that resolves to response data
   return response.data;
