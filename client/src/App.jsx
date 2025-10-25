@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import CategoriesList from "./components/Category/CategoriesList";
 import UpdateCategory from "./components/Category/UpdateCategory";
 import TransactionForm from "./components/Transactions/TransactionForm";
-import TransactionList from "./components/Transactions/TransactionList";
+import TransactionList from "./components/TransactionList";
 import TransactionChart from "./components/Transactions/TransactionChart";
 
 
@@ -31,9 +31,9 @@ function App() {
         <Route path="/add-category" element={<AddCategory />} />
         <Route path="/categories" element={<CategoriesList />} />
         <Route path="/update-category/:id" element={<UpdateCategory />} />
-        <Route path="add-transaction" element={<TransactionForm />} />
-        <Route path="transactions" element={<TransactionList />} />
-        <Route path="transaction-chart" element={<TransactionChart />} />
+        <Route path="/add-transaction" element={<TransactionForm />} />
+        <Route path="/transactions" element={<TransactionList />} />
+        <Route path="/transaction-chart" element={<TransactionChart />} />
 
 
       </Routes>

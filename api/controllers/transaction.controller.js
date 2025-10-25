@@ -1,4 +1,3 @@
-import Category from "../models/Transaction.js";
 import asyncHandler from "express-async-handler";
 import { createError } from "../middlewares/errorHandlerMiddleware.js";
 import Transaction from "../models/Transaction.js";
@@ -10,15 +9,24 @@ export const createTransaction = asyncHandler(async (req, res, next) => {
     return next(createError(400, "Type, Amount and Date fields are required"));
   }
 
-  // Parse date string to valid Date object (expects YYYY-MM-DD or similar)
+  // Parse date string to valid Date object. Accepts YYYY-MM-DD (HTML date input)
+  // and DD-MM-YYYY or DD-MM-YY. If parsing fails return a 400 error.
   let parsedDate;
   if (typeof date === "string") {
-    // Try to parse DD-MM-YY or DD-MM-YYYY
     const parts = date.split("-");
     if (parts.length === 3) {
-      // If year is 2 digits, prepend '20'
-      let year = parts[2].length === 2 ? `20${parts[2]}` : parts[2];
-      parsedDate = new Date(`${year}-${parts[1]}-${parts[0]}`);
+      // Detect common formats by the length of the first segment
+      // YYYY-MM-DD -> first part length === 4
+      if (parts[0].length === 4) {
+        parsedDate = new Date(date); // YYYY-MM-DD
+      } else {
+        // assume DD-MM-YYYY or DD-MM-YY
+        let day = parts[0];
+        let month = parts[1];
+        let year = parts[2];
+        if (year.length === 2) year = `20${year}`;
+        parsedDate = new Date(`${year}-${month}-${day}`);
+      }
     } else {
       parsedDate = new Date(date);
     }
@@ -26,7 +34,16 @@ export const createTransaction = asyncHandler(async (req, res, next) => {
     parsedDate = date;
   }
 
-  const transaction = new Category({
+  if (!parsedDate || isNaN(parsedDate.getTime())) {
+    return next(
+      createError(
+        400,
+        "Invalid date format. Expected YYYY-MM-DD or DD-MM-YYYY."
+      )
+    );
+  }
+
+  const transaction = new Transaction({
     user: req.user,
     type,
     category,

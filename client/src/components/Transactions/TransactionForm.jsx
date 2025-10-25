@@ -26,8 +26,6 @@ const validationSchema = Yup.object({
 });
 
 const TransactionForm = () => {
-
-
   // navigation
   const navigate = useNavigate();
 
@@ -58,7 +56,7 @@ const TransactionForm = () => {
       date: "",
       description: "",
     },
-    
+
     validationSchema,
     onSubmit: (values) => {
       mutateAsync(values)
@@ -80,6 +78,21 @@ const TransactionForm = () => {
         <p className="text-gray-600">Fill in the details below.</p>
       </div>
       {/* Display alert message */}
+      {isError && (
+        <AlertMessage
+          type="error"
+          message={
+            error?.response?.data?.message ||
+            "Something went wrong, please try again later"
+          }
+        />
+      )}
+      {isSuccess && (
+        <AlertMessage
+          type="success"
+          message="Transaction added successfully, redirecting..."
+        />
+      )}
 
       {/* Transaction Type Field */}
       <div className="space-y-2">
