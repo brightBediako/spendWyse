@@ -3,7 +3,12 @@ import { BASE_URL } from "../../utils/url";
 
 // get user
 export const getUserAPI = async (userId) => {
-  const response = await axios.get(`${BASE_URL}profile/${userId}`);
+  const token = localStorage.getItem("token");
+  const response = await axios.get(`${BASE_URL}profile/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   //   return a promise that resolves to response data
   return response.data;
 };
