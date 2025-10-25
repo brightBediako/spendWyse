@@ -36,7 +36,7 @@ const TransactionForm = () => {
     onSuccess: () => {
       // redirect to categories page after successful addition
       setTimeout(() => {
-        navigate("/transactions");
+        navigate("/dashboard");
       }, 2000);
     },
   });

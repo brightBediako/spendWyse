@@ -1,10 +1,51 @@
 import React, { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { FaTrash, FaEdit } from "react-icons/fa";
-
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import { deleteTransactionAPI, getTransactionsAPI } from "../../services/transactions/transactionService";
+import { useNavigate } from "react-router-dom";
+import { getCategoriesAPI } from "../../services/categories/categoryService";
 
 const TransactionList = () => {
+  // filter states
+  const [filters, setFilters] = useState({
+    startDate: "",
+    endDate: "",
+    type: "",
+    category: "",
+  });
+
+  // handle update transaction
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // fetch transactions
+  const { data: categoriesData, isLoading: categoryLoading, error: categoryErr, } = useQuery({
+    queryFn: getCategoriesAPI,
+    queryKey: ["list-categories"],
+  });
+
+  // fetch transactions
+  const { data: transactions, isError, isLoading, isFetched, error, refetch } = useQuery({
+    queryFn: () => getTransactionsAPI(filters),
+    queryKey: ["list-transactions", filters],
+  });
+
+  // navigate hook
+  const navigate = useNavigate();
+
+  // delete transaction mutation
+  const { mutateAsync: mutationAsync } = useMutation({
+    mutationFn: deleteTransactionAPI,
+    mutationKey: ["delete-transaction"],
+  });
+
+
   return (
     <div className="my-4 p-4 shadow-lg rounded-lg bg-white">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -12,18 +53,24 @@ const TransactionList = () => {
         <input
           type="date"
           name="startDate"
+          value={filters.startDate}
+          onChange={handleFilterChange}
           className="p-2 rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
         />
         {/* End Date */}
         <input
           type="date"
           name="endDate"
+          value={filters.endDate}
+          onChange={handleFilterChange}
           className="p-2 rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
         />
         {/* Type */}
         <div className="relative">
           <select
             name="type"
+            value={filters.type}
+            onChange={handleFilterChange}
             className="w-full p-2 rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 appearance-none"
           >
             <option value="">All Types</option>
@@ -36,10 +83,22 @@ const TransactionList = () => {
         <div className="relative">
           <select
             name="category"
+            value={filters.category}
+            onChange={handleFilterChange}
             className="w-full p-2 rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 appearance-none"
-          ></select>
+          >
+            <option value="All">All Categories</option>
+            <option value="Uncategorized">Uncategorized</option>
+            {categoriesData?.map((category) => (
+              <option key={category?._id} value={category?._id}>
+                {category?.name}
+              </option>
+            ))}
+
+          </select>
           <ChevronDownIcon className="w-5 h-5 absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500" />
         </div>
+        {/* category end */}
       </div>
       <div className="my-4 p-4 shadow-lg rounded-lg bg-white">
         {/* Inputs and selects for filtering (unchanged) */}
@@ -48,7 +107,8 @@ const TransactionList = () => {
             Filtered Transactions
           </h3>
           <ul className="list-disc pl-5 space-y-2">
-            {/* {transactions?.map((transaction) => (
+            {/* list transactions */}
+            {transactions?.map((transaction) => (
               <li
                 key={transaction.id}
                 className="bg-white p-3 rounded-md shadow border border-gray-200 flex justify-between items-center"
@@ -58,11 +118,10 @@ const TransactionList = () => {
                     {new Date(transaction.date).toLocaleDateString()}
                   </span>
                   <span
-                    className={`ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      transaction.type === "income"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
+                    className={`ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${transaction.type === "income"
+                      ? "bg-green-100 text-green-800"
+                      : "bg-red-100 text-red-800"
+                      }`}
                   >
                     {transaction.type.charAt(0).toUpperCase() +
                       transaction.type.slice(1)}
@@ -90,7 +149,8 @@ const TransactionList = () => {
                   </button>
                 </div>
               </li>
-            ))} */}
+            ))}
+            {/* list transaction end */}
           </ul>
         </div>
       </div>
