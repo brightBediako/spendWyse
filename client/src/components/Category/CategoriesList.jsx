@@ -8,7 +8,7 @@ import AlertMessage from "../Alert/AlertMessage";
 const CategoriesList = () => {
   // fetch categories
   const { data, isError, isLoading, error, refetch } = useQuery({
-    queryKey: ["categories"],
+    queryKey: ["list-categories"],
     queryFn: getCategoriesAPI,
   });
 

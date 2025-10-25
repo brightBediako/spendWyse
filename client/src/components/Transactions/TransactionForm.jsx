@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
@@ -7,10 +7,11 @@ import {
   FaRegCommentDots,
   FaWallet,
 } from "react-icons/fa";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { addTransactionAPI } from "../../services/transactions/transactionService";
 import AlertMessage from "../Alert/AlertMessage";
+import { getCategoriesAPI } from "../../services/categories/categoryService";
 
 const validationSchema = Yup.object({
   type: Yup.string()
@@ -25,24 +26,27 @@ const validationSchema = Yup.object({
 });
 
 const TransactionForm = () => {
+
+
   // navigation
   const navigate = useNavigate();
 
-  // mutation to add category
-  const {
-    mutateAsync,
-    isError,
-    error,
-    isSuccess,
-  } = useMutation({
+  // mutation to add transaction 
+  const { mutateAsync, isPending, isError: AddTranErr, error: transErr, isSuccess } = useMutation({
     mutationFn: addTransactionAPI,
-    mutationKey: ["transaction"],
+    mutationKey: ["add-transaction"],
     onSuccess: () => {
       // redirect to categories page after successful addition
       setTimeout(() => {
         navigate("/transactions");
       }, 2000);
     },
+  });
+
+  // fetch categories for the select dropdown
+  const { data, isError, isLoading, isFetched, error, refetch } = useQuery({
+    queryFn: getCategoriesAPI,
+    queryKey: ["list-categories"],
   });
 
   // formik setup
@@ -54,8 +58,8 @@ const TransactionForm = () => {
       date: "",
       description: "",
     },
+    
     validationSchema,
-
     onSubmit: (values) => {
       mutateAsync(values)
         .then((data) => console.log(data))
@@ -130,6 +134,11 @@ const TransactionForm = () => {
           className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
         >
           <option value="">Select a category</option>
+          {data?.map((category) => (
+            <option key={category._id} value={category._id}>
+              {category.name}
+            </option>
+          ))}
         </select>
         {formik.touched.category && formik.errors.category && (
           <p className="text-red-500 text-xs italic">

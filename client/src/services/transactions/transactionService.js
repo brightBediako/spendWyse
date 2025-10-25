@@ -13,7 +13,7 @@ export const addTransactionAPI = async ({
   description,
 }) => {
   const response = await axios.post(
-    `${BASE_URL}transaction/create-transaction`,
+    `${BASE_URL}transactions/create-transaction`,
     {
       type,
       category,
