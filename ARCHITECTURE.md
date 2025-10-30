@@ -1,4 +1,3 @@
-
 ---
 
 # spendWyse Architecture
