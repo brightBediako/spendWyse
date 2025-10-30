@@ -31,29 +31,35 @@ export const changePassword = asyncHandler(async (req, res) => {
   // hash new password
   const hash = bcrypt.hashSync(newPassword, 5);
   user.password = hash;
-  await user.save(
-    validateBeforeSave = false,
-  );
+  await user.save((validateBeforeSave = false));
 
   res.status(200).json({ message: "Password updated successfully" });
 });
 
 // update user profile
-export const updateProfile = asyncHandler(async (req, res) => {
+export const updateProfile = asyncHandler(async (req, res, next) => {
   const { username, email } = req.body;
 
+  // Fetch the current user
+  const existingUser = await User.findById(req.user);
+
+  if (!existingUser) {
+    return next(createError(404, "User not found"));
+  }
+
+  // Only update values if they are provided (not undefined or empty string)
   const updatedUser = await User.findByIdAndUpdate(
     req.user,
     {
-      username,
-      email,
+      username:
+        username !== undefined && username !== ""
+          ? username
+          : existingUser.username,
+      email: email !== undefined && email !== "" ? email : existingUser.email,
     },
     { new: true }
   );
-  // check if user exists
-  if (!updatedUser) {
-    return next(createError(404, "User not found"));
-  }
+
   res.status(200).json({
     message: "Profile updated successfully",
     id: updatedUser._id,

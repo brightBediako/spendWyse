@@ -60,8 +60,15 @@ const TransactionForm = () => {
     validationSchema,
     onSubmit: (values) => {
       mutateAsync(values)
-        .then((data) => console.log(data))
-        .catch((e) => console.log(e));
+        .then((data) => {
+          // redirect to categories page after successful addition
+          setTimeout(() => {
+            navigate("/dashboard");
+          }, 2000);
+        })
+        .catch((e) => {
+          // console.log(e); // Removed console.log
+        });
     },
   });
 

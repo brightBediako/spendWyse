@@ -63,9 +63,14 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
   }
 
   const oldName = category.name;
-  // update category properties only when provided
-  if (normalizedName) category.name = normalizedName;
-  if (type) category.type = type.toLowerCase();
+  // update category properties only when provided and non-empty
+  if (
+    normalizedName !== undefined &&
+    normalizedName !== null &&
+    normalizedName !== ""
+  )
+    category.name = normalizedName;
+  if (type !== undefined && type !== "") category.type = type.toLowerCase();
 
   // check if category with the same name already exists for this user
   if (normalizedName && oldName !== normalizedName) {
@@ -94,19 +99,19 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
 // delete category
 export const deleteCategory = asyncHandler(async (req, res, next) => {
   const category = await Category.findById(req.params.id);
-if (!category) return next(createError(404, "Category not found!"));
+  if (!category) return next(createError(404, "Category not found!"));
 
-if (category.user.toString() === req.user.toString()) {
-  // update transactions with this category
-  const defaultCategory = "Uncategorized";
-  await Transaction.updateMany(
-    { user: req.user, category: category.name },
-    { $set: { category: defaultCategory } }
-  );
-  // delete category
-  await Category.findByIdAndDelete(req.params.id);
-  res.status(200).json({ message: "Category has been deleted." });
-} else {
-  return next(createError(403, "You can delete only your category!"));
-}
+  if (category.user.toString() === req.user.toString()) {
+    // update transactions with this category
+    const defaultCategory = "Uncategorized";
+    await Transaction.updateMany(
+      { user: req.user, category: category.name },
+      { $set: { category: defaultCategory } }
+    );
+    // delete category
+    await Category.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "Category has been deleted." });
+  } else {
+    return next(createError(403, "You can delete only your category!"));
+  }
 });

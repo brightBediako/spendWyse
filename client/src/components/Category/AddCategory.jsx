@@ -53,8 +53,16 @@ const AddCategory = () => {
 
     onSubmit: (values) => {
       mutateAsync(values)
-        .then((data) => console.log(data))
-        .catch((e) => console.log(e));
+        .then((data) => {
+          // redirect to categories page after successful addition
+          setTimeout(() => {
+            navigate("/categories");
+          }, 2000);
+        })
+        .catch((e) => {
+          // Handle error, e.g., display an alert message
+          console.error("Error adding category:", e);
+        });
     },
   });
 

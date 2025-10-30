@@ -24,9 +24,9 @@ const LoginForm = () => {
   // redux dispatch
   const dispatch = useDispatch();
 
-    // navigation
-    const navigate = useNavigate();
-    
+  // navigation
+  const navigate = useNavigate();
+
   // use mutation
   const { mutateAsync, isPending, isError, error, isSuccess } = useMutation({
     mutationFn: loginAPI,
@@ -48,7 +48,6 @@ const LoginForm = () => {
     // validation schema
     validationSchema,
     onSubmit: (values) => {
-      console.log(values);
       // http call
       mutateAsync(values)
         .then((data) => {
@@ -58,7 +57,7 @@ const LoginForm = () => {
           localStorage.setItem("userInfo", JSON.stringify(data));
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         })
     },
   });

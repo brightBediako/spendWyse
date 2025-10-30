@@ -33,7 +33,10 @@ const CategoriesList = () => {
           // refetch categories after deletion
           refetch();
         })
-        .catch((e) => console.log(e));
+        .catch((e) => {
+          // refetch categories after deletion
+          refetch();
+        });
     }
   };
 

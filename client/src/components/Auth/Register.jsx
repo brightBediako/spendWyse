@@ -41,7 +41,6 @@ const RegistrationForm = () => {
     // validation schema
     validationSchema,
     onSubmit: (values) => {
-      console.log(values);
       // http call
       mutateAsync(values)
         .then(() => { })

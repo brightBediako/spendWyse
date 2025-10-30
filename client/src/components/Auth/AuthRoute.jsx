@@ -9,7 +9,6 @@ const AuthRoute = ({ children }) => {
     if (token) {
         return children;
     } else {
-        // window.location.href = '/login';
         return <Navigate to="/login" />;
     }
 }

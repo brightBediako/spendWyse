@@ -96,12 +96,26 @@ export const updateTransaction = asyncHandler(async (req, res, next) => {
   if (!transaction) return next(createError(404, "Transaction not found!"));
 
   if (transaction && transaction.user.toString() === req.user.toString()) {
-    (transaction.type = req.body.type || transaction.type),
-      (transaction.category = req.body.category || transaction.category),
-      (transaction.amount = req.body.amount || transaction.amount),
-      (transaction.date = req.body.date || transaction.date),
-      (transaction.description =
-        req.body.description || transaction.description);
+    transaction.type =
+      req.body.type !== undefined && req.body.type !== ""
+        ? req.body.type
+        : transaction.type;
+    transaction.category =
+      req.body.category !== undefined && req.body.category !== ""
+        ? req.body.category
+        : transaction.category;
+    transaction.amount =
+      req.body.amount !== undefined && req.body.amount !== ""
+        ? req.body.amount
+        : transaction.amount;
+    transaction.date =
+      req.body.date !== undefined && req.body.date !== ""
+        ? req.body.date
+        : transaction.date;
+    transaction.description =
+      req.body.description !== undefined && req.body.description !== ""
+        ? req.body.description
+        : transaction.description;
 
     const updatedTransaction = await transaction.save();
     res.status(200).json({

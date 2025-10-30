@@ -40,7 +40,7 @@ const UpdatePassword = () => {
           dispatch(logoutAction())
           // remove user from storage
           localStorage.removeItem("userInfo");
-        }).catch(e => console.log(e));
+        });
     },
   });
 

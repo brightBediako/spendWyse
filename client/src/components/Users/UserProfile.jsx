@@ -1,19 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FaUserCircle, FaEnvelope, FaLock } from "react-icons/fa";
 import { useFormik } from "formik";
 import UpdatePassword from "./UpdatePassword";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { updateUserAPI } from "../../services/users/userServices";
+import { getUserAPI, updateUserAPI } from "../../services/users/userServices";
 import AlertMessage from "../Alert/AlertMessage";
 
 
 const UserProfile = () => {
+  // Get logged-in user ID (from localStorage as used elsewhere in your codebase)
+  const userObj = JSON.parse(localStorage.getItem('user'));
+  const userId = userObj ? userObj._id : undefined;
+
+  // Fetch user profile (must provide userId!)
+  const { data: user } = useQuery({
+    queryKey: ["user", userId],
+    queryFn: () => getUserAPI(userId),
+    enabled: !!userId,
+  });
+
   // mutation hook
-  const { mutateAsync, isPending, isLoading, isError, error, isSuccess } = useMutation({
+  const { mutateAsync, isPending, isError, error, isSuccess } = useMutation({
     mutationFn: updateUserAPI,
     mutationKey: ["update-profile"],
   });
-
 
   // formik setup
   const formik = useFormik({
@@ -21,23 +31,38 @@ const UserProfile = () => {
       username: "",
       email: "",
     },
-
+    enableReinitialize: true,
     //Submit
     onSubmit: (values) => {
       mutateAsync(values)
         .then((data) => {
-          console.log("Profile updated", data);
         })
-        .catch(e => console.log(e));
+        .catch(e => {
+        });
     },
   });
+
+  // Clear the form after a successful update
+  useEffect(() => {
+    if (isSuccess) {
+      formik.resetForm();
+    }
+  }, [isSuccess]);
+
   return (
     <>
       <div className="max-w-4xl mx-auto my-10 p-8 bg-white rounded-lg shadow-md">
         <h1 className="mb-2 text-2xl text-center font-extrabold">
-          Welcome
-          <span className="text-gray-500 text-sm ml-2">email</span>
+          Welcome {user?.username || "User"}
+          <span className="text-gray-500 text-sm ml-2">
+            {user?.email ? `<${user?.email}>` : ''}
+          </span>
         </h1>
+        {/* Summary card for user info */}
+        <div className="flex flex-col items-center bg-blue-50 rounded-lg p-4 mb-8 max-w-md mx-auto">
+          <div className="flex items-center mt-2"><FaUserCircle className="mr-2 text-gray-500" /> <span className="font-medium text-gray-800">{user?.username || '—'}</span></div>
+          <div className="flex items-center mt-1"><FaEnvelope className="mr-2 text-gray-500" /> <span className="font-medium text-gray-800">{user?.email || '—'}</span></div>
+        </div>
         <h3 className="text-xl font-semibold text-gray-800 mb-4">
           Update Profile
         </h3>

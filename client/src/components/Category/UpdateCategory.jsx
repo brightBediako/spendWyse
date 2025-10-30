@@ -55,8 +55,15 @@ const UpdateCategory = () => {
     onSubmit: (values) => {
       const data = { id, ...values };
       mutateAsync(data)
-        .then((data) => console.log(data))
-        .catch((e) => console.log(e));
+        .then((data) => {
+          // redirect to categories page after successful addition
+          setTimeout(() => {
+            navigate("/categories");
+          }, 2000);
+        })
+        .catch((e) => {
+          // console.log(e);
+        });
     },
   });
 
