@@ -20,7 +20,8 @@ const app = express();
 
 //cors configuration
 const corsOptions = {
-  origin: "http://localhost:5173",
+  // origin: "http://localhost:5173",
+  origin: "https://spendwyse.netlify.app/",
   credentials: true, // Allow cookies to be sent
 };
 
