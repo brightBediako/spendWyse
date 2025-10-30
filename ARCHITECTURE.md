@@ -8,7 +8,7 @@ graph TD
     A[App.jsx]
     B[HomePage]
     C[Login / Register]
-    D[PrivateNavbar/PublicNavbar]
+    D[PrivateNavbar / PublicNavbar]
     E[Dashboard]
     F[TransactionForm]
     G[CategoriesList / AddCategory / UpdateCategory]
@@ -24,8 +24,8 @@ graph TD
     N[category.route.js]
     O[transaction.route.js]
     P[user.route.js]
-    Q[Controllers<br>(auth, user, category, transaction)]
-    R[Models<br>(User, Category, Transaction)]
+    Q[Controllers\n(auth, user, category, transaction)]
+    R[Models\n(User, Category, Transaction)]
     S[DB Config]
     T[Middleware]
   end
@@ -50,7 +50,10 @@ graph TD
   J -- "REST (auth, user, category, transaction)" --> L
 
   %% Backend structure
-  L --> M & N & O & P
+  L --> M
+  L --> N
+  L --> O
+  L --> P
   M --> Q
   N --> Q
   O --> Q
@@ -58,4 +61,3 @@ graph TD
   Q --> R
   L --> S
   L --> T
-```
