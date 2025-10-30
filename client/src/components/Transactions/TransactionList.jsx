@@ -50,6 +50,7 @@ const TransactionList = () => {
     <div className="my-4 p-4 shadow-lg rounded-lg bg-white">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* Start Date */}
+        <label htmlFor="startDate">Start Date</label>
         <input
           type="date"
           name="startDate"
@@ -58,6 +59,7 @@ const TransactionList = () => {
           className="p-2 rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
         />
         {/* End Date */}
+        <label htmlFor="endDate">End Date</label>
         <input
           type="date"
           name="endDate"

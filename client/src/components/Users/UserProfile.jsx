@@ -27,8 +27,8 @@ const UserProfile = () => {
   // formik setup (initialize form with fetched user data)
   const formik = useFormik({
     initialValues: {
-      username: user?.username || "",
-      email: user?.email || "",
+      username: "",
+      email: "",
     },
     enableReinitialize: true,
     //Submit
@@ -62,6 +62,7 @@ const UserProfile = () => {
           <div className="flex items-center mt-2"><FaUserCircle className="mr-2 text-gray-500" /> <span className="font-medium text-gray-800">{user?.username || '—'}</span></div>
           <div className="flex items-center mt-1"><FaEnvelope className="mr-2 text-gray-500" /> <span className="font-medium text-gray-800">{user?.email || '—'}</span></div>
         </div>
+        {/* end */}
         <h3 className="text-xl font-semibold text-gray-800 mb-4">
           Update Profile
         </h3>
