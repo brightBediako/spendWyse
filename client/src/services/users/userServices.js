@@ -5,15 +5,16 @@ import { getUserFromStorage } from "../../utils/getUserFromStorage";
 // get token
 const token = getUserFromStorage();
 
-// get user
-export const getUserAPI = async (userId) => {
-  const token = localStorage.getItem("token");
-  const response = await axios.get(`${BASE_URL}profile/${userId}`, {
+// get user (profile for the currently authenticated user)
+export const getUserAPI = async () => {
+  // use the token helper which reads from `userInfo`
+  const authToken = getUserFromStorage();
+  const response = await axios.get(`${BASE_URL}profile`, {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${authToken}`,
     },
   });
-  //   return a promise that resolves to response data
+  // return a promise that resolves to response data
   return response.data;
 };
 

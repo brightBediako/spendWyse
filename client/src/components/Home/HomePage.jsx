@@ -82,7 +82,7 @@ const HeroSection = () => {
         </div>
       </div>
       {/* Testimonials */}
-      <div className="bg-gray-100 py-20 px-4">
+      {/* <div className="bg-gray-100 py-20 px-4">
         <h2 className="text-3xl font-bold text-center text-gray-800">
           What Our Users Say
         </h2>
@@ -104,7 +104,8 @@ const HeroSection = () => {
             <p className="mt-4 font-bold">- John Smith</p>
           </div>
         </div>
-      </div>
+      </div> */}
+      {/* Testimonials end*/}
       {/* CTA */}
       <div className="bg-blue-500 text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">

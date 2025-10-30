@@ -8,15 +8,14 @@ import AlertMessage from "../Alert/AlertMessage";
 
 
 const UserProfile = () => {
-  // Get logged-in user ID (from localStorage as used elsewhere in your codebase)
-  const userObj = JSON.parse(localStorage.getItem('user'));
-  const userId = userObj ? userObj._id : undefined;
+  // Read saved login info (Login stores `userInfo` in localStorage)
+  const userInfo = JSON.parse(localStorage.getItem("userInfo") || "null");
 
-  // Fetch user profile (must provide userId!)
+  // Fetch user profile (the backend `profile` endpoint uses the token to identify the user)
   const { data: user } = useQuery({
-    queryKey: ["user", userId],
-    queryFn: () => getUserAPI(userId),
-    enabled: !!userId,
+    queryKey: ["user"],
+    queryFn: () => getUserAPI(),
+    enabled: !!userInfo,
   });
 
   // mutation hook
@@ -25,20 +24,20 @@ const UserProfile = () => {
     mutationKey: ["update-profile"],
   });
 
-  // formik setup
+  // formik setup (initialize form with fetched user data)
   const formik = useFormik({
     initialValues: {
-      username: "",
-      email: "",
+      username: user?.username || "",
+      email: user?.email || "",
     },
     enableReinitialize: true,
     //Submit
-    onSubmit: (values) => {
-      mutateAsync(values)
-        .then((data) => {
-        })
-        .catch(e => {
-        });
+    onSubmit: async (values) => {
+      try {
+        await mutateAsync(values);
+      } catch {
+        // error is handled by react-query state (isError / error)
+      }
     },
   });
 
@@ -47,15 +46,15 @@ const UserProfile = () => {
     if (isSuccess) {
       formik.resetForm();
     }
-  }, [isSuccess]);
+  }, [isSuccess, formik]);
 
   return (
     <>
       <div className="max-w-4xl mx-auto my-10 p-8 bg-white rounded-lg shadow-md">
         <h1 className="mb-2 text-2xl text-center font-extrabold">
-          Welcome {user?.username || "User"}
+          Welcome
           <span className="text-gray-500 text-sm ml-2">
-            {user?.email ? `<${user?.email}>` : ''}
+            {user?.username ? `${user?.username}` : ''}
           </span>
         </h1>
         {/* Summary card for user info */}

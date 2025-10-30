@@ -6,6 +6,7 @@ A full-stack personal finance management application to help users track, catego
 
 - [Features](#features)
 - [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
 - [Setup & Installation](#setup--installation)
   - [Prerequisites](#prerequisites)
   - [Backend (API)](#backend-api)
@@ -49,6 +50,92 @@ A full-stack personal finance management application to help users track, catego
 1. `cd client`
 2. `npm install`
 3. `npm run dev` (default to `http://localhost:5173`)
+
+## Project Structure
+
+Below is the top-level folder structure for this repository. It shows the primary directories and important files to help you navigate the codebase.
+
+```
+spendWyse/
+├─ api/
+│  ├─ package.json
+│  ├─ server.js
+│  ├─ app/
+│  │  └─ app.js
+│  ├─ config/
+│  │  └─ dbConfig.js
+│  ├─ controllers/
+│  │  ├─ auth.controller.js
+│  │  ├─ category.controller.js
+│  │  ├─ transaction.controller.js
+│  │  └─ user.controller.js
+│  ├─ middlewares/
+│  │  ├─ errorHandlerMiddleware.js
+│  │  └─ isAuth.js
+│  ├─ models/
+│  │  ├─ Category.js
+│  │  ├─ Transaction.js
+│  │  └─ User.js
+│  ├─ routes/
+│  │  ├─ auth.route.js
+│  │  ├─ category.route.js
+│  │  ├─ transaction.route.js
+│  │  └─ user.route.js
+│  └─ utils/
+│     └─ (helpers)
+├─ client/
+│  ├─ package.json
+│  ├─ index.html
+│  ├─ vite.config.js
+│  ├─ public/
+│  └─ src/
+│     ├─ App.css
+│     ├─ App.jsx
+│     ├─ index.css
+│     ├─ main.jsx
+│     ├─ assets/
+│     ├─ components/
+│     │  ├─ TransactionList.jsx
+│     │  ├─ Alert/
+│     │  │  └─ AlertMessage.jsx
+│     │  ├─ Auth/
+│     │  │  ├─ Login.jsx
+│     │  │  └─ Register.jsx
+│     │  ├─ Category/
+│     │  │  ├─ AddCategory.jsx
+│     │  │  ├─ CategoriesList.jsx
+│     │  │  └─ UpdateCategory.jsx
+│     │  ├─ Home/
+│     │  │  └─ HomePage.jsx
+│     │  ├─ Navbar/
+│     │  │  ├─ PrivateNavbar.jsx
+│     │  │  └─ PublicNavbar.jsx
+│     │  ├─ Transactions/
+│     │  │  ├─ TransactionChart.jsx
+│     │  │  ├─ TransactionForm.jsx
+│     │  │  └─ TransactionList.jsx
+│     │  └─ Users/
+│     │     ├─ Dashboard.jsx
+│     │     ├─ UpdatePassword.jsx
+│     │     └─ UserProfile.jsx
+│     ├─ redux/
+│     │  ├─ slice/
+│     │  │  └─ authSlice.js
+│     │  └─ store/
+│     │     └─ store.js
+│     ├─ services/
+│     │  ├─ auth/
+│     │  │  └─ authServices.js
+│     │  ├─ categories/
+│     │  │  └─ categoryService.js
+│     │  ├─ transactions/
+│     │  │  └─ transactionService.js
+│     │  └─ users/
+│     │     └─ userServices.js
+│     └─ utils/
+  ├─ getUserFromStorage.js
+  └─ url.js
+```
 
 ## API Structure
 
