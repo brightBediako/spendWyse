@@ -4,10 +4,11 @@ import { useFormik } from "formik";
 import UpdatePassword from "./UpdatePassword";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { updateUserAPI } from "../../services/users/userServices";
+import AlertMessage from "../Alert/AlertMessage";
 
 
 const UserProfile = () => {
-// mutation hook
+  // mutation hook
   const { mutateAsync, isPending, isLoading, isError, error, isSuccess } = useMutation({
     mutationFn: updateUserAPI,
     mutationKey: ["update-profile"],
@@ -40,6 +41,10 @@ const UserProfile = () => {
         <h3 className="text-xl font-semibold text-gray-800 mb-4">
           Update Profile
         </h3>
+        {/* display error messages */}
+        {isPending && <AlertMessage type="loading" message="Updating..." />}
+        {isError && <AlertMessage type="error" message={error?.response?.data?.message || "Something went wrong!"} />}
+        {isSuccess && <AlertMessage type="success" message="Updated successful!" />}
 
         <form onSubmit={formik.handleSubmit} className="space-y-6">
           {/* User Name Field */}

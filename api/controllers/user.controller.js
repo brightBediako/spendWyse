@@ -31,7 +31,9 @@ export const changePassword = asyncHandler(async (req, res) => {
   // hash new password
   const hash = bcrypt.hashSync(newPassword, 5);
   user.password = hash;
-  await user.save();
+  await user.save(
+    validateBeforeSave = false,
+  );
 
   res.status(200).json({ message: "Password updated successfully" });
 });

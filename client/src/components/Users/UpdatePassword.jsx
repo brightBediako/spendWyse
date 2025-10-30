@@ -6,6 +6,7 @@ import { changePasswordAPI } from "../../services/users/userServices";
 import { useMutation } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { logoutAction } from "../../redux/slice/authSlice";
+import AlertMessage from "../Alert/AlertMessage";
 
 
 const validationSchema = Yup.object({
@@ -42,6 +43,7 @@ const UpdatePassword = () => {
         }).catch(e => console.log(e));
     },
   });
+
   return (
     <div className="flex flex-col items-center justify-center p-4">
       <h2 className="text-lg font-semibold mb-4">Change Your Password</h2>
@@ -53,6 +55,10 @@ const UpdatePassword = () => {
           >
             New Password
           </label>
+          {/* display error messages */}
+          {isPending && <AlertMessage type="loading" message="Updating..." />}
+          {isError && <AlertMessage type="error" message={error?.response?.data?.message || "Something went wrong!"} />}
+          {isSuccess && <AlertMessage type="success" message="Password updated successful!" />}
           <div className="flex items-center border-2 py-2 px-3 rounded">
             <AiOutlineLock className="text-gray-400 mr-2" />
             <input
