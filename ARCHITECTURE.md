@@ -1,9 +1,4 @@
 ---
-
-# spendWyse Architecture
-
-The following diagram illustrates the high-level structure and relationships between major modules/components in the spendWyse application.
-
 config:
   layout: elk
 ---
