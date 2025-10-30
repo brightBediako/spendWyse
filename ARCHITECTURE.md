@@ -2,10 +2,7 @@
 
 The following diagram illustrates the high-level structure and relationships between major modules/components in the spendWyse application.
 
----
-config:
-  layout: elk
----
+
 flowchart TD
  subgraph Client["Frontend: React App"]
         A["App.jsx"]
