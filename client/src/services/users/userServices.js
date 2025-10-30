@@ -18,7 +18,9 @@ export const getUserAPI = async (userId) => {
 };
 
 // update user
-export const updateUserAPI = async (username, email) => {
+export const updateUserAPI = async (data) => {
+  // accept a single payload object so callers can pass the form values directly
+  const { username, email } = data || {};
   const response = await axios.put(
     `${BASE_URL}profile/update-profile`,
     {
@@ -31,7 +33,7 @@ export const updateUserAPI = async (username, email) => {
       },
     }
   );
-  //   return a promise that resolves to response data
+  // return a promise that resolves to response data
   return response.data;
 };
 
