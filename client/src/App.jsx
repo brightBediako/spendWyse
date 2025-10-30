@@ -33,7 +33,7 @@ function App() {
         <Route path="/update-category/:id" element={<UpdateCategory />} />
         <Route path="/add-transaction" element={<TransactionForm />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/user-profile" element={<UserProfile />} />
+        <Route path="/profile" element={<UserProfile />} />
 
 
       </Routes>

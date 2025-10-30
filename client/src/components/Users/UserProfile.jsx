@@ -2,34 +2,32 @@ import React from "react";
 import { FaUserCircle, FaEnvelope, FaLock } from "react-icons/fa";
 import { useFormik } from "formik";
 import UpdatePassword from "./UpdatePassword";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { updateUserAPI } from "../../services/users/userServices";
+
 
 const UserProfile = () => {
-  // get user details from the store (mocked here)
-  // const user = useSelector((state) => state?.auth?.user);
-   
-  const { data, isError, isLoading, error, refetch } = useQuery({
-    queryKey: ["get-user"],
-    queryFn: async () => {
-      // Replace with your real API call, e.g. return getUserAPI();
-      // Using a safe placeholder so the component doesn't error during development.
-      return {};
-    },
+// mutation hook
+  const { mutateAsync, isPending, isLoading, isError, error, isSuccess } = useMutation({
+    mutationFn: updateUserAPI,
+    mutationKey: ["update-profile"],
   });
 
-  // ensure `user` is always defined to avoid "user is not defined" errors
-  const user = data?.user || data || { email: "" };
 
   // formik setup
   const formik = useFormik({
     initialValues: {
-      email: "",
       username: "",
+      email: "",
     },
 
     //Submit
     onSubmit: (values) => {
-      console.log(values);
+      mutateAsync(values)
+        .then((data) => {
+          console.log("Profile updated", data);
+        })
+        .catch(e => console.log(e));
     },
   });
   return (
@@ -37,7 +35,7 @@ const UserProfile = () => {
       <div className="max-w-4xl mx-auto my-10 p-8 bg-white rounded-lg shadow-md">
         <h1 className="mb-2 text-2xl text-center font-extrabold">
           Welcome
-          <span className="text-gray-500 text-sm ml-2">{user?.email}</span>
+          <span className="text-gray-500 text-sm ml-2">email</span>
         </h1>
         <h3 className="text-xl font-semibold text-gray-800 mb-4">
           Update Profile

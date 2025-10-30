@@ -1,5 +1,9 @@
 import axios from "axios";
 import { BASE_URL } from "../../utils/url";
+import { getUserFromStorage } from "../../utils/getUserFromStorage";
+
+// get token
+const token = getUserFromStorage();
 
 // get user
 export const getUserAPI = async (userId) => {
@@ -14,20 +18,35 @@ export const getUserAPI = async (userId) => {
 };
 
 // update user
-export const updateUserAPI = async (userId, userData) => {
+export const updateUserAPI = async (username, email) => {
   const response = await axios.put(
-    `${BASE_URL}profile/update-profile/${userId}`,
-    userData
+    `${BASE_URL}profile/update-profile`,
+    {
+      username,
+      email,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
   );
   //   return a promise that resolves to response data
   return response.data;
 };
 
 // change password
-export const changePasswordAPI = async (userId, passwords) => {
+export const changePasswordAPI = async (newPassword) => {
   const response = await axios.put(
-    `${BASE_URL}profile/change-password/${userId}`,
-    passwords
+    `${BASE_URL}profile/change-password`,
+    {
+      newPassword,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
   );
   //   return a promise that resolves to response data
   return response.data;

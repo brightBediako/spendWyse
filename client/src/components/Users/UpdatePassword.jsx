@@ -2,21 +2,44 @@ import React, { useState } from "react";
 import { AiOutlineLock } from "react-icons/ai";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { changePasswordAPI } from "../../services/users/userServices";
+import { useMutation } from "@tanstack/react-query";
+import { useDispatch } from "react-redux";
+import { logoutAction } from "../../redux/slice/authSlice";
+
+
 const validationSchema = Yup.object({
   password: Yup.string()
-    .min(5, "Password must be at least 5 characters long")
+    .min(6, "Password must be at least 6 characters long")
     .required("Email is required"),
 });
+// UpdatePassword Component
 const UpdatePassword = () => {
+  // redux dispatch
+  const dispatch = useDispatch();
+
+  // mutation hook can be added here for API call
+  const { mutateAsync, isPending, isLoading, isError, error, isSuccess } = useMutation({
+    mutationFn: changePasswordAPI,
+    mutationKey: ["change-password"],
+  });
+
+  // formik setup
   const formik = useFormik({
     initialValues: {
-      password: "123456",
+      password: "",
     },
     // Validations
     validationSchema,
     //Submit
     onSubmit: (values) => {
-      console.log(values);
+      mutateAsync(values.password)
+        .then((data) => {
+          // on success, log out the user
+          dispatch(logoutAction())
+          // remove user from storage
+          localStorage.removeItem("userInfo");
+        }).catch(e => console.log(e));
     },
   });
   return (
@@ -36,7 +59,7 @@ const UpdatePassword = () => {
               id="new-password"
               type="password"
               name="newPassword"
-              {...formik.getFieldProps("email")}
+              {...formik.getFieldProps("password")}
               className="outline-none flex-1"
               placeholder="Enter new password"
             />
