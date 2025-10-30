@@ -2,6 +2,19 @@
 
 A full-stack personal finance management application to help users track, categorize, and analyze transactions.
 
+## Table of Contents
+
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Setup & Installation](#setup--installation)
+  - [Prerequisites](#prerequisites)
+  - [Backend (API)](#backend-api)
+  - [Frontend (Client)](#frontend-client)
+- [API Structure](#api-structure)
+- [Usage](#usage)
+- [Dev & Contribution](#dev--contribution)
+- [Architecture](#architecture)
+
 ## Features
 
 - User authentication
