@@ -18,15 +18,45 @@ dotenv.config();
 dbConfig();
 const app = express();
 
-//cors configuration
+// CORS configuration
+// Allow requests from the client origins used in development and production.
+const whitelist = [
+  process.env.CLIENT_URL || "http://localhost:5173",
+  "https://spendwyse.netlify.app",
+];
+
 const corsOptions = {
-  // origin: "http://localhost:5173",
-  origin: "https://spendwyse.netlify.app/",
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps, curl, or server-to-server)
+    if (!origin) return callback(null, true);
+    if (whitelist.indexOf(origin) !== -1) {
+      return callback(null, true);
+    } else {
+      return callback(new Error("Not allowed by CORS"), false);
+    }
+  },
   credentials: true, // Allow cookies to be sent
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "X-Requested-With",
+    "Accept",
+  ],
 };
 
 // pass incoming data
-app.use(cors(corsOptions));
+app.use((req, res, next) => {
+  // Use the cors middleware per-request so we can control origin dynamically
+  cors(corsOptions)(req, res, (err) => {
+    if (err) {
+      // Log and forward the error to the global error handler
+      console.warn("CORS error:", err.message || err);
+      return next(err);
+    }
+    next();
+  });
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
