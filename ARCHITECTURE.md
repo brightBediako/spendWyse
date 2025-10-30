@@ -1,7 +1,7 @@
----
+<!-- ---
 config:
   layout: elk
----
+--- -->
 flowchart TD
  subgraph Client["Frontend: React App"]
         A["App.jsx"]
